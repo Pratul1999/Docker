@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+
+  frontend:
+    build: ./frontend
+    container_name: note-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - REDIS_HOST=redis
+    depends_on:
+      - redis
+
+volumes:
+  redis-data:
