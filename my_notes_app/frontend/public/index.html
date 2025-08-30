@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Note App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px auto;
+      max-width: 600px;
+    }
+    h1 {
+      text-align: center;
+    }
+    #noteForm {
+      display: flex;
+      margin-bottom: 20px;
+    }
+    #noteInput {
+      flex-grow: 1;
+      padding: 10px;
+      font-size: 1rem;
+    }
+    #addBtn {
+      padding: 10px 15px;
+      font-size: 1rem;
+      margin-left: 10px;
+    }
+    ul#notesList {
+      list-style-type: none;
+      padding: 0;
+    }
+    ul#notesList li {
+      background: #f5f5f5;
+      margin-bottom: 10px;
+      padding: 10px;
+      border-radius: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .noteText {
+      flex-grow: 1;
+    }
+    .noteDate {
+      font-size: 0.8rem;
+      color: #666;
+      margin-left: 10px;
+      white-space: nowrap;
+    }
+    button.deleteBtn {
+      background: #e74c3c;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 6px 10px;
+      cursor: pointer;
+      margin-left: 15px;
+    }
+    button.deleteBtn:hover {
+      background: #c0392b;
+    }
+  </style>
+</head>
+<body>
+  <h1>My Notes</h1>
+  <form id="noteForm">
+    <input type="text" id="noteInput" placeholder="Write a new note..." autocomplete="off" />
+    <button id="addBtn" type="submit">Add</button>
+  </form>
+  <ul id="notesList"></ul>
+
+  <script>
+    const noteForm = document.getElementById('noteForm');
+    const noteInput = document.getElementById('noteInput');
+    const notesList = document.getElementById('notesList');
+
+    async function fetchNotes() {
+      const res = await fetch('/api/notes');
+      const notes = await res.json();
+      notesList.innerHTML = '';
+      for (const note of notes) {
+        const li = document.createElement('li');
+
+        const textSpan = document.createElement('span');
+        textSpan.textContent = note.text;
+        textSpan.className = 'noteText';
+
+        const dateSpan = document.createElement('span');
+        dateSpan.textContent = new Date(note.date).toLocaleString();
+        dateSpan.className = 'noteDate';
+
+        const deleteBtn = document.createElement('button');
+        deleteBtn.textContent = 'Delete';
+        deleteBtn.className = 'deleteBtn';
+        deleteBtn.onclick = async () => {
+          await fetch('/api/notes/' + note.id, { method: 'DELETE' });
+          fetchNotes();
+        };
+
+        li.appendChild(textSpan);
+        li.appendChild(dateSpan);
+        li.appendChild(deleteBtn);
+
+        notesList.appendChild(li);
+      }
+    }
+
+    noteForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const noteText = noteInput.value.trim();
+      if (!noteText) return alert('Please enter a note!');
+      await fetch('/api/notes', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ text: noteText })
+      });
+      noteInput.value = '';
+      fetchNotes();
+    });
+
+    fetchNotes();
+  </script>
+</body>
+</html>
