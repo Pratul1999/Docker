@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Simple Stylish Web Page</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #71b7e6, #9b59b6);
+      color: white;
+      text-align: center;
+      padding: 50px;
+      margin: 0;
+    }
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+    }
+    p {
+      font-size: 1.5rem;
+      max-width: 600px;
+      margin: 0 auto 40px;
+      line-height: 1.4;
+    }
+    button {
+      background: #fff;
+      border: none;
+      color: #9b59b6;
+      font-weight: bold;
+      padding: 15px 30px;
+      font-size: 1.1rem;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      box-shadow: 0 4px 15px rgba(255,255,255,0.4);
+    }
+    button:hover {
+      background: #f1c40f;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <h1>Welcome to My Stylish Web Page</h1>
+  <p>This is a simple static page served by NGINX inside a Docker container.</p>
+  <button onclick="alert('Hello from Kubernetes!')">Click Me!</button>
+</body>
+</html>
